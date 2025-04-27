@@ -17,7 +17,7 @@
   </properties>
 
   <dependencies>
-    <!-- Servlet API (provided by your container) -->
+    <!-- Servlet  -->
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
@@ -25,7 +25,7 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- JSP API (provided by your container) -->
+    <!-- JSP  -->
     <dependency>
       <groupId>jakarta.servlet.jsp</groupId>
       <artifactId>jakarta.servlet.jsp-api</artifactId>
@@ -33,7 +33,7 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- JUnit 5 for unit testing -->
+
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
@@ -46,7 +46,7 @@
     <finalName>cen4802final</finalName>
 
     <plugins>
-      <!-- Compile Java 17 -->
+      <!-- Java 17 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -63,12 +63,11 @@
         <artifactId>maven-war-plugin</artifactId>
         <version>3.3.2</version>
         <configuration>
-          <!-- no web.xml needed for Servlet 5.0+ -->
           <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
       </plugin>
 
-      <!-- Run JUnit 5 tests -->
+      <!-- JUnit -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>

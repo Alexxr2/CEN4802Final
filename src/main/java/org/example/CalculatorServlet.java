@@ -25,7 +25,6 @@ public class CalculatorServlet extends HttpServlet {
             default  -> throw new ServletException("Unknown op: " + op);
         }
 
-        // --- Simple logging line: ---
         System.out.println("CALC_LOG: " + a + " " + op + " " + b + " = " + result);
 
         req.setAttribute("result", result);
