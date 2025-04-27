@@ -31,12 +31,12 @@ pipeline {
         """
       }
       post {
-        always { sh 'docker rm -f smoke-test || true' }
+        always {
+          sh 'docker rm -f smoke-test || true'
+        }
       }
     }
-
-    }
-  }
+  } // <-- closes stages
 
   post {
     always {
