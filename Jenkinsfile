@@ -68,7 +68,7 @@ pipeline {
       }
       post {
         always {
-          # Clean up the test container no matter what
+
           sh 'docker rm -f cen4802-inttest || true'
         }
       }
