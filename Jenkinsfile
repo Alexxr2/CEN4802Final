@@ -24,23 +24,17 @@ pipeline {
 
     stage('Smoke Test') {
       steps {
-        // Run your WAR in Tomcat on host port 8082 instead of 8080
         sh """
           docker run -d --name smoke-test -p 8083:8080 ${IMAGE}
-          # give the server a few seconds to start up
-          sleep 8
-          # hit the root URL to verify the app responds
-          curl --fail http://localhost:8083/ || exit 1
-          # optionally hit the calculator form:
-          # curl --fail "http://localhost:8082/?a=3&b=4&op=%2B" || exit 1
+          sleep 15
+          docker exec smoke-test curl --fail http://localhost:8080/ || exit 1
         """
       }
       post {
-        always {
-          // tear it down no matter what
-          sh 'docker rm -f smoke-test || true'
-        }
+        always { sh 'docker rm -f smoke-test || true' }
       }
+    }
+
     }
   }
 
