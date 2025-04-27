@@ -22,21 +22,25 @@ pipeline {
       }
     }
 
-    stage('Smoke Test') {
+    stage('Smoke Test & Deploy') {
       steps {
         sh """
-          docker run -d --name smoke-test -p 8083:8080 ${IMAGE}
+          # remove any old instance so 'docker run' won't error
+          docker rm -f cen4802-calc || true
+
+          # start your calculator image, keep it running on host:8082→container:8080
+          docker run -d --name cen4802-calc -p 8082:8080 ${IMAGE}
+
+          # give Tomcat a bit to boot
           sleep 15
-          docker exec smoke-test curl --fail http://localhost:8080/ || exit 1
+
+          # verify it’s up (inside the container we hit localhost:8080)
+          docker exec cen4802-calc curl --fail http://localhost:8080/ || exit 1
         """
       }
-      post {
-        always {
-          sh 'docker rm -f smoke-test || true'
-        }
-      }
+      // NO post { always { docker rm -f cen4802-calc }}  => leaves container running
     }
-  } // <-- closes stages
+  }
 
   post {
     always {
