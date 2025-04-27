@@ -26,7 +26,7 @@ pipeline {
       steps {
         // Run your WAR in Tomcat on host port 8082 instead of 8080
         sh """
-          docker run -d --name smoke-test -p 8082:8080 ${IMAGE}
+          docker run -d --name smoke-test -p 8083:8080 ${IMAGE}
           # give the server a few seconds to start up
           sleep 8
           # hit the root URL to verify the app responds
