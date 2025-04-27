@@ -30,7 +30,7 @@ pipeline {
           # give the server a few seconds to start up
           sleep 8
           # hit the root URL to verify the app responds
-          curl --fail http://localhost:8082/ || exit 1
+          curl --fail http://localhost:8083/ || exit 1
           # optionally hit the calculator form:
           # curl --fail "http://localhost:8082/?a=3&b=4&op=%2B" || exit 1
         """
