@@ -7,7 +7,9 @@ pipeline {
 
   stages {
     stage('Checkout') {
-      steps { checkout scm }
+      steps {
+        checkout scm
+      }
     }
 
     stage('Build & Test') {
@@ -25,20 +27,51 @@ pipeline {
     stage('Smoke Test & Deploy') {
       steps {
         sh """
-          # remove any old instance so 'docker run' won't error
+          # Tear down any old calculator container
           docker rm -f cen4802-calc || true
 
-          # start your calculator image, keep it running on host:8082→container:8080
+          # Run your calculator WAR in Tomcat, mapping host 8082 → container 8080
           docker run -d --name cen4802-calc -p 8082:8080 ${IMAGE}
 
-          # give Tomcat a bit to boot
+          # Give Tomcat time to start
           sleep 15
 
-          # verify it’s up (inside the container we hit localhost:8080)
+          # Verify the root endpoint responds
           docker exec cen4802-calc curl --fail http://localhost:8080/ || exit 1
         """
       }
-      // NO post { always { docker rm -f cen4802-calc }}  => leaves container running
+      // NO post { always { docker rm -f cen4802-calc } }
+      // —we leave cen4802-calc running so you can inspect it in Docker Desktop.
+    }
+
+    stage('Integration Test') {
+      steps {
+        sh """
+          # Run a separate short-lived container for end-to-end testing
+          docker rm -f cen4802-inttest || true
+          docker run -d --name cen4802-inttest -p 8084:8080 ${IMAGE}
+
+          # Wait for Tomcat
+          sleep 10
+
+          # POST 7+8 and capture the HTML response
+          RESP=\$(docker exec cen4802-inttest \
+            curl -s -X POST http://localhost:8080/calculate \
+              -d 'a=7&b=8&op=%2B')
+
+          echo "Integration test response:"
+          echo "\$RESP"
+
+          # Look for "Result: 15" in the HTML
+          echo "\$RESP" | grep -q "Result: 15" || exit 1
+        """
+      }
+      post {
+        always {
+          # Clean up the test container no matter what
+          sh 'docker rm -f cen4802-inttest || true'
+        }
+      }
     }
   }
 
