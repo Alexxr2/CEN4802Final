@@ -1,6 +1,6 @@
 pipeline {
   agent any
-  tools { maven 'M3' }
+  tools { maven 'M1' }
   environment {
     IMAGE = "cen4802:${env.BUILD_NUMBER}"
   }
