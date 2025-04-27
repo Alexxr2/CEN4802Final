@@ -15,15 +15,21 @@ public class CalculatorServlet extends HttpServlet {
         String op = req.getParameter("op");
         int a = Integer.parseInt(req.getParameter("a"));
         int b = Integer.parseInt(req.getParameter("b"));
+
         int result;
         switch (op) {
             case "+" -> result = service.add(a, b);
             case "-" -> result = service.subtract(a, b);
             case "*" -> result = service.multiply(a, b);
             case "/" -> result = service.divide(a, b);
-            default -> throw new ServletException("Unknown op: " + op);
+            default  -> throw new ServletException("Unknown op: " + op);
         }
+
+        // --- Simple logging line: ---
+        System.out.println("CALC_LOG: " + a + " " + op + " " + b + " = " + result);
+
         req.setAttribute("result", result);
-        req.getRequestDispatcher("/index.jsp").forward(req, resp);
+        req.getRequestDispatcher("/index.jsp")
+                .forward(req, resp);
     }
 }
